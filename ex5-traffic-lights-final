@@ -1,1 +1,59 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+DigitalIn mySwitches[] = {(A0), (A1), (A2), (A3), (A4),(A5)};
+BusOut myLEDs((D2), (D3), (D4), (D5), (D6), (D7));
+
+/*
+Analog / Digital / Traffic Light Sequence
+A0     = D2      = R1
+A1     = D3      = A1
+A2     = D4      = G1
+A3     = D5      = R2
+A4     = D6      = A2
+A5     = D7      = G2
+*/
+
+/*
+    Respond to switches 1 (A0) & 2 (A1)
+    so that the lights remain in r1g2 state until switch 1 is pressed 
+    and the r2g1 state until switch 2 is pressed
+    
+*/
+
+#define blinkRate 1000
+
+int main()
+{
+    while (1) 
+    {
+        myLEDs = 0x0c;
+        thread_sleep_for(blinkRate);        
+        myLEDs = 0x0c;
+        thread_sleep_for(blinkRate);
+        myLEDs = 0x0c;
+        thread_sleep_for(blinkRate);
+        myLEDs = 0x0a;
+        thread_sleep_for(blinkRate);        
+        myLEDs = 0x09;
+        thread_sleep_for(blinkRate);
+        myLEDs = 0x19;
+        thread_sleep_for(blinkRate);
+        myLEDs = 0x21;
+        thread_sleep_for(blinkRate);        
+        myLEDs = 0x21;
+        thread_sleep_for(blinkRate);
+        myLEDs = 0x21;
+        thread_sleep_for(blinkRate);
+        myLEDs = 0x11;
+        thread_sleep_for(blinkRate);        
+        myLEDs = 0x09;
+        thread_sleep_for(blinkRate);
+        myLEDs = 0x0b;
+        thread_sleep_for(blinkRate);
+        myLEDs = 0x0c;
+        thread_sleep_for(blinkRate);         
+    }
+}
+
 
