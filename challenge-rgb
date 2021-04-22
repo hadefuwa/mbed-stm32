@@ -1,7 +1,7 @@
 #include "mbed.h"
 #include "platform/mbed_thread.h"
 
-BusOut Buttons((D2), (D3), (D4), (D5));
+DigitalIn mySwitches[] = {((D2), (D3), (D4), (D5)};
 BusOut RGB((D7), (D8), (D9));
 
 #define blinkRate 1000
