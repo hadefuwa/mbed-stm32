@@ -1,0 +1,18 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+//Debounce delay
+#define DEBOUNCE    200
+DigitalIn mySW(A0);
+DigitalOut myLED(D2);
+
+int main()
+{
+    mySW.mode(PullUp);
+
+    while (1) 
+    {
+        myLED = !mySW;
+        thread_sleep_for(DEBOUNCE);
+    }
+}
+
