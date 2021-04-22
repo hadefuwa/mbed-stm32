@@ -1,0 +1,17 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+#define BLINKING_RATE_MS    1000
+
+int main()
+{
+    BusOut myLEDs((D2), (D3), (D4), (D5), (D6), (D7));
+
+    while (true) {
+        myLEDs = 0x3F;
+        thread_sleep_for(BLINKING_RATE_MS);
+        myLEDs = 0x00;
+        thread_sleep_for(BLINKING_RATE_MS);
+    }
+}
+
