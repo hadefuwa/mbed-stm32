@@ -1,0 +1,29 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+//Debounce delay
+#define DEBOUNCE    200
+
+DigitalIn mySwitches[] = {(A0), (A1), (A2), (A3), (A4),(A5)};
+DigitalOut myLEDs[] = {(D2),(D3),(D4), (D5), (D6), (D7)};
+
+int main()
+{
+    int loop_war;
+    
+    for (loop_var = 0; loop_var < 6; loop_var++)
+    {
+        mySwitches[loop_var].mode(PullUp); 
+        myLEDs[loop_var] = 0;   
+    }
+
+    while (1) 
+    {
+        for (loop_var = 0; loop_var < 6; loop_var++)
+        { 
+            myLEDs[loop_var] = !mySwitches[loop_var];   
+        }
+        thread_sleep_for(DEBOUNCE);
+    }
+}
+
