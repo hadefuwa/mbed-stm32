@@ -9,7 +9,6 @@ BusOut myLEDs((D2), (D3), (D4), (D5), (D6), (D7));
     Respond to switches 1 (A0) & 2 (A1)
     so that the lights remain in r1g2 state until switch 1 is pressed 
     and the r2g1 state until switch 2 is pressed
-    
 */
 
 #define blinkRate 1000
