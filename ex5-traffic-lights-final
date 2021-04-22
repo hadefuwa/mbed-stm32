@@ -16,9 +16,10 @@ BusOut myLEDs((D2), (D3), (D4), (D5), (D6), (D7));
 
 int main()
 {
-    mySW.mode(PullUp);
+    SW1.mode(PullUp);
+    SW2.mode(PullUp);
     
-    while (1) 
+    while (true) 
     {
         myLEDs = 0x0c;
         thread_sleep_for(blinkRate);        
@@ -41,31 +42,29 @@ int main()
         
         */
         
-        while(SW2)
+        while(SW2 == 0)
         {
-                
+            myLEDs = 0x0a;
+            thread_sleep_for(blinkRate);        
+            myLEDs = 0x09;
+            thread_sleep_for(blinkRate);
+            myLEDs = 0x19;
+            thread_sleep_for(blinkRate);
+            myLEDs = 0x21;
+            thread_sleep_for(blinkRate);        
+            myLEDs = 0x21;
+            thread_sleep_for(blinkRate);
+            myLEDs = 0x21;
+            thread_sleep_for(blinkRate);
+            myLEDs = 0x11;
+            thread_sleep_for(blinkRate);        
+            myLEDs = 0x09;
+            thread_sleep_for(blinkRate);
+            myLEDs = 0x0b;
+            thread_sleep_for(blinkRate);
+            myLEDs = 0x0c;
+            thread_sleep_for(blinkRate); 
         }
-        
-        myLEDs = 0x0a;
-        thread_sleep_for(blinkRate);        
-        myLEDs = 0x09;
-        thread_sleep_for(blinkRate);
-        myLEDs = 0x19;
-        thread_sleep_for(blinkRate);
-        myLEDs = 0x21;
-        thread_sleep_for(blinkRate);        
-        myLEDs = 0x21;
-        thread_sleep_for(blinkRate);
-        myLEDs = 0x21;
-        thread_sleep_for(blinkRate);
-        myLEDs = 0x11;
-        thread_sleep_for(blinkRate);        
-        myLEDs = 0x09;
-        thread_sleep_for(blinkRate);
-        myLEDs = 0x0b;
-        thread_sleep_for(blinkRate);
-        myLEDs = 0x0c;
-        thread_sleep_for(blinkRate);         
     }
 }
 
