@@ -1,0 +1,33 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+BusOut Buttons((D2), (D3), (D4), (D5));
+BusOut RGB((D7), (D8), (D9));
+
+#define blinkRate 1000
+
+int main()
+{
+    SW1.mode(PullUp);
+    SW2.mode(PullUp);
+    
+    while (true) 
+    {
+        RGB = 0x0c;
+        thread_sleep_for(blinkRate);        
+        
+        while(SW1 == 0)
+        {
+            RGB = 0x11;
+            thread_sleep_for(blinkRate);         
+        }
+        
+        while(SW2 == 0)
+        {
+            RGB = 0x0a;
+            thread_sleep_for(blinkRate);        
+        }
+    }
+}
+
+
