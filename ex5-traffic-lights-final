@@ -28,19 +28,17 @@ int main()
         myLEDs = 0x0c;
         thread_sleep_for(blinkRate);
         
-        /*
-            insert a while loop with the condition to repeat
-            while the pin corresponding to second switch is high 
-            (this corresponds to the sensor on road 2
-            not detecting any traffic). So, while the switch is not 
-            pressed and the state of pin is high/3.3V,
-            the loop is repeated as condition is true. 
-            When the switch is pressed, the state of pin becomes
-            low (so condition is now false) and the loop is exited. 
-            This can be done using the code:
-            while(SW2);
-        
-        */
+        while(SW1 == 0)
+        {
+            myLEDs = 0x11;
+            thread_sleep_for(blinkRate);        
+            myLEDs = 0x09;
+            thread_sleep_for(blinkRate);
+            myLEDs = 0x0b;
+            thread_sleep_for(blinkRate);
+            myLEDs = 0x0c;
+            thread_sleep_for(blinkRate); 
+        }
         
         while(SW2 == 0)
         {
@@ -56,14 +54,6 @@ int main()
             thread_sleep_for(blinkRate);
             myLEDs = 0x21;
             thread_sleep_for(blinkRate);
-            myLEDs = 0x11;
-            thread_sleep_for(blinkRate);        
-            myLEDs = 0x09;
-            thread_sleep_for(blinkRate);
-            myLEDs = 0x0b;
-            thread_sleep_for(blinkRate);
-            myLEDs = 0x0c;
-            thread_sleep_for(blinkRate); 
         }
     }
 }
