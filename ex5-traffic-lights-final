@@ -1,18 +1,9 @@
 #include "mbed.h"
 #include "platform/mbed_thread.h"
 
-DigitalIn mySwitches[] = {(A0), (A1), (A2), (A3), (A4),(A5)};
+DigitalIn SW1 = (A0);
+DigitalIn SW2 = (A1);
 BusOut myLEDs((D2), (D3), (D4), (D5), (D6), (D7));
-
-/*
-Analog / Digital / Traffic Light Sequence
-A0     = D2      = R1
-A1     = D3      = A1
-A2     = D4      = G1
-A3     = D5      = R2
-A4     = D6      = A2
-A5     = D7      = G2
-*/
 
 /*
     Respond to switches 1 (A0) & 2 (A1)
@@ -25,6 +16,8 @@ A5     = D7      = G2
 
 int main()
 {
+    mySW.mode(PullUp);
+    
     while (1) 
     {
         myLEDs = 0x0c;
@@ -33,6 +26,26 @@ int main()
         thread_sleep_for(blinkRate);
         myLEDs = 0x0c;
         thread_sleep_for(blinkRate);
+        
+        /*
+            insert a while loop with the condition to repeat
+            while the pin corresponding to second switch is high 
+            (this corresponds to the sensor on road 2
+            not detecting any traffic). So, while the switch is not 
+            pressed and the state of pin is high/3.3V,
+            the loop is repeated as condition is true. 
+            When the switch is pressed, the state of pin becomes
+            low (so condition is now false) and the loop is exited. 
+            This can be done using the code:
+            while(SW2);
+        
+        */
+        
+        while(SW2)
+        {
+                
+        }
+        
         myLEDs = 0x0a;
         thread_sleep_for(blinkRate);        
         myLEDs = 0x09;
