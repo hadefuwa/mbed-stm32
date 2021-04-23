@@ -4,7 +4,7 @@
 DigitalIn mySwitches[] = {(D2), (D3), (D4), (D5)};
 BusOut RGB((D7), (D8), (D9));
 
-#define blinkRate 1000
+#define BLINKRATE 1000
 
 int main()
 {
@@ -19,12 +19,13 @@ int main()
     while (true) 
     {
         RGB = 0x0F;
-        thread_sleep_for(blinkRate);        
+        thread_sleep_for(BLINKRATE);
+        RGB = 0x00;        
         /*
         while(D2)
         {
             RGB = 0x00;
-            thread_sleep_for(blinkRate);         
+            thread_sleep_for(BLINKRATE);         
         }
         */
     }
