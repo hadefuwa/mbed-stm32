@@ -1,33 +1,58 @@
 #include "mbed.h"
 #include "platform/mbed_thread.h"
 
-DigitalIn mySwitches[] = {(D2), (D3), (D4), (D5)};
-BusOut RGB((D7), (D8), (D9));
+DigitalIn SW1 = (D2);
+DigitalIn SW2 = (D3);
+DigitalIn SW3 = (D4);
+DigitalIn SW4 = (D5);
+BusOut Red = (D7);
+BusOut Green = (D8);
+BusOut Blue = (D9);
 
-#define BLINKRATE 1000
+#define blinkRate 1000
 
 int main()
 {
-    /*
-    int x;
-    for (x = 0; x < 4; x++)
-    {
-        mySwitches[x].mode(PullUp); 
-        RGB[x] = 0;   
-    }
-    */
+    SW1.mode(PullUp);
+    SW2.mode(PullUp);
+    SW3.mode(PullUp);
+    SW4.mode(PullUp);
+    
     while (true) 
     {
-        RGB = 0x0F;
-        thread_sleep_for(BLINKRATE);
-        RGB = 0x00;        
-        /*
-        while(D2)
+        Red = 1;
+        Green = 1;
+        Blue = 1;
+        thread_sleep_for(blinkRate);  
+              
+        while(SW1 == 0)
         {
-            RGB = 0x00;
-            thread_sleep_for(BLINKRATE);         
+            Red = 0;
+            Green = 0;
+            Blue = 0;
+            thread_sleep_for(blinkRate);        
         }
-        */
+        while(SW2 == 0)
+        {
+            Red = 0;
+            Green = 0;
+            Blue = 0;
+            thread_sleep_for(blinkRate);        
+        }
+        while(SW3 == 0)
+        {
+            Red = 0;
+            Green = 0;
+            Blue = 0;
+            thread_sleep_for(blinkRate);        
+        }
+        while(SW4 == 0)
+        {
+            Red = 0;
+            Green = 0;
+            Blue = 0;
+            thread_sleep_for(blinkRate);        
+        }        
     }
 }
 
