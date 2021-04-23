@@ -27,7 +27,7 @@ int main()
               
         while(SW1 == 0)
         {
-            Red = 0;
+            Red = 1;
             Green = 0;
             Blue = 0;
             thread_sleep_for(blinkRate);        
@@ -35,7 +35,7 @@ int main()
         while(SW2 == 0)
         {
             Red = 0;
-            Green = 0;
+            Green = 1;
             Blue = 0;
             thread_sleep_for(blinkRate);        
         }
@@ -43,14 +43,14 @@ int main()
         {
             Red = 0;
             Green = 0;
-            Blue = 0;
+            Blue = 1;
             thread_sleep_for(blinkRate);        
         }
         while(SW4 == 0)
         {
-            Red = 0;
-            Green = 0;
-            Blue = 0;
+            Red = 1;
+            Green = 1;
+            Blue = 1;
             thread_sleep_for(blinkRate);        
         }        
     }
