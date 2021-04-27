@@ -1,0 +1,12 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+PwmOut pwm1(D3);
+
+int main()
+{
+   pwm1.period(0.010); //period of 0.01s = frequency of 100Hz
+   pwm1 = 0.5; //50% duty cycle 
+}
+
+
