@@ -1,0 +1,21 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+AnalogIn ain(A0);
+DigitalOut led(D3);
+
+int main()
+{
+    while(1)
+    {
+        if (ain > 0.3)
+        {
+            led = 1;   
+        }
+        else 
+        {
+            led = 0;
+        }   
+    }
+}
+
