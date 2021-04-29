@@ -1,0 +1,20 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+PwmOut speaker(D3);
+
+int main()
+{
+    float i;
+    while(1)
+    {
+        //create a sawtooth sound wave
+        for (i = 0; i < 1; i += 0.05)
+        {
+               speaker.period(0.0015);
+               speaker = i*0.05;
+        }
+           
+    }
+}
+
