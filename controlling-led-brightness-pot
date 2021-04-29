@@ -1,0 +1,33 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+AnalogIn ain(A0);
+PwmOut led(D3);
+
+int main()
+{
+    while(1)
+    {
+        if (ain > 0.9)
+        {
+            led = 1;   
+        }
+        else if (ain > 0.75)
+        {
+            led = 0.75;   
+        }
+        else if (ain > 0.5)
+        {
+            led = 0.5;   
+        }
+        else if (ain > 0.25)
+        {
+            led = 0.25;   
+        }
+        else 
+        {
+            led = 0;
+        }   
+    }
+}
+
