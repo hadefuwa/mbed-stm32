@@ -1,0 +1,44 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+#include <chrono>
+using namespace std::chrono;
+
+
+Timer timer_fast; //define Timer with name "timer_fast"
+Timer timer_slow; //define Timer with name "timer_slow"
+
+DigitalOut ledA(D2);
+DigitalOut ledB(D4);
+
+
+void task_fast() //fast task
+{
+    ledA = !ledA;
+}
+void task_slow() //slow task
+{
+    ledB = !ledB;
+}
+
+int main()
+{
+    timer_fast.start(); //start the timers
+    timer_slow.start(); //start the timers
+    
+    while (1)
+    {
+        if (duration_cast<milliseconds>(timer_fast.elapsed_time()).count()>200)
+        {
+            //test timer value
+            task_fast(); //call task at trigger time
+            timer_fast.reset(); //reset the timer
+        }
+        if (duration_cast<milliseconds>(timer_slow.elapsed_time()).count()>1000)
+        {
+            //test timer value
+            task_slow(); //call task at trigger time
+            timer_slow.reset(); //reset the timer    
+        } 
+}
+
+
