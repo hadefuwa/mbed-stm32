@@ -1,0 +1,25 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+InterruptIn mybutton(USER_BUTTON);
+DigitalOut myled(LED1);
+
+int delay = 1000; // 1 second
+
+void pressed()
+{
+        myled = !myled;
+}
+
+int main()
+{
+    mybutton.mode(PullUp);
+    
+    // attach address of ISR function to falling edge
+    mybutton.fall(&pressed);
+    
+    while (1) {
+        //pretend to be doing something here
+    }
+}
+
