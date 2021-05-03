@@ -1,0 +1,30 @@
+#include "mbed.h"
+Timer timer_fast;
+Timer timer_slow;
+DigitalOut ledA(LED1);
+DigitalOut ledB(LED4);
+ 
+void task_fast(void);
+void task_slow(void);
+ 
+int main() {
+  timer_fast.start();
+  timer_slow.start(); 
+  while(true){
+    if (timer_fast.read() > 0.2) {
+      task_fast();
+      timer_fast.reset();
+    }
+    if (timer_slow.read() > 1) {
+      task_slow();
+      timer_slow.reset();
+    }
+  }
+}
+ 
+void task_fast(void) {
+  ledA = !ledA;
+}
+void task_slow(void) {
+  ledB = !ledB;
+}
