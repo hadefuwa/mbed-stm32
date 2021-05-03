@@ -1,0 +1,40 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+Timeout Response; //create a Timeout, and name it "Response"
+
+DigitalIn button (USER_BUTTON);
+DigitalOut led1(D2); //blinks in time with main while(1) loop
+DigitalOut led2(D4); //set high fixed period after button press
+DigitalOut led3(D6); //goes high when button is pressed
+
+
+void blink() //function called at the end of the Timeout
+{
+    led2 = 1;
+    wait_us(500 * 1000); //500ms-cannot use thread_sleep_for in ISR
+    led2 = 0;    
+}
+
+int main()
+{
+    button.mode(PullUp);
+    while(1)
+    {
+        if (button == 0)
+        {
+            // attach blink function to Response Timeout
+            // to occur after 2 seconds
+            Response.attach(&blink,2s);
+            led3 = 1; //shows button has been pressed
+        }
+        else 
+        {
+            led3 = 0;    
+        }
+        led1 = !led1;
+        thread_sleep_for(200);
+    }
+}
+
+
