@@ -1,0 +1,22 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+Ticker time_up; //define a Ticker, with name "time.up"
+
+DigitalOut myled(LED1); 
+
+void led_switch() 
+{
+    myled=!myled;
+}
+
+int main()
+{
+    time_up.attach(&led_switch, 0.125);
+    while(1)
+    {
+        //sit in a while loop    
+    }
+}
+
+
