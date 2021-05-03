@@ -1,0 +1,16 @@
+#include "mbed.h"
+InterruptIn button(p14);
+DigitalOut led(LED1);       
+DigitalOut flash(LED4);
+ 
+void isr1() {
+  led = !led;
+}
+ 
+int main() {
+  button.rise(&isr1);                              
+  while(true) {
+    flash = !flash;
+    wait(0.2);
+  }
+}
