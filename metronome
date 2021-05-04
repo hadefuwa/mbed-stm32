@@ -1,0 +1,27 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+BusOut LED = (D2);
+BusOut Buzzer = (D3);
+InterruptIn button(USER_BUTTON);
+
+#define blinkRate 1000
+
+int main()
+{
+    button.mode(PullUp);
+    LED = 0;
+    Buzzer = 0;
+    thread_sleep_for(blinkRate); 
+    
+    while (true) 
+    {
+        if (button)
+        {
+            LED = !LED;
+        }   
+    }
+}
+
+
+//this is not completed
