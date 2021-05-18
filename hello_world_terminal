@@ -1,0 +1,11 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+static BufferedSerial pc(USBTX, USBRX);
+
+int main()
+{
+    printf("Hello World\n");
+    thread_sleep_for(2000);
+    printf("Hello\nWorld\n");
+}
