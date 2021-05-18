@@ -1,0 +1,13 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+static BufferedSerial pc(USBTX, USBRX);
+
+int main()
+{
+    printf("Name\tNumber\tText\n");
+    printf("Roz\t12345\tHello Roz\n");
+    printf("Tom\t67890\tHello Tom\n");
+}
+
+
