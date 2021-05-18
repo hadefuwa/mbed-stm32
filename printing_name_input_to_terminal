@@ -1,0 +1,36 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+
+static BufferedSerial pc(USBTX, USBRX);
+
+int main()
+{
+    char *c = new char[1];
+    char buf[3], str[20];
+    bool read = true;
+    int index = 0;
+    char msg[] = "Please Enter Your Name:\n\r";
+    pc.write(msg, sizeof(msg));
+    while(read) {
+        pc.read(c, sizeof(c));
+        pc.write(c, sizeof(c));
+        if (c[0] == 0xd) { //end of line
+            buf[index] = '\0';
+            sprintf(str, "\n\rHello %s\n\r", buf);
+            pc.write(str, sizeof(str));
+            read = false;
+        }
+        else if (index == 30) {
+            buf[index] = c[0];
+            buf[3] = '\0';
+            sprintf(str, "\n\rHello %s\n\r", buf);
+            pc.write(str, sizeof(str));
+            read = false;
+        } else {
+            buf[index] = c[0];
+        }
+        index++;
+    }
+}
+
+
