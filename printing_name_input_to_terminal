@@ -16,14 +16,14 @@ int main()
         pc.write(c, sizeof(c));
         if (c[0] == 0xd) { //end of line
             buf[index] = '\0';
-            sprintf(str, "\n\rHello %s\n\r", buf);
+            sprintf(str, "\n\rHello %s \n\r", buf);
             pc.write(str, sizeof(str));
             read = false;
         }
         else if (index == 30) {
             buf[index] = c[0];
-            buf[3] = '\0';
-            sprintf(str, "\n\rHello %s\n\r", buf);
+            buf[2] = '\0';
+            sprintf(str, "\n\rHello %s \n\r", buf);
             pc.write(str, sizeof(str));
             read = false;
         } else {
