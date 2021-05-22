@@ -1,0 +1,38 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+#define CMDDELAY 500 //delay for command in ms
+
+// I2C connection
+I2C temp_sensor(D14, D15);
+
+// I2C address of temperature sensor DS1631
+const int temp_addr = 0x90; //default address with all address pins low
+
+char cmds[] = {0x51, 0xAA}; //commands for start temperature conversion
+
+//read temperature
+char read_temp[2];
+
+int main()
+{
+    char str[32];
+    while(1){
+        //Write 0x51 to 0x90 to start temp conversion
+        temp_sensor.write(temp_addr, &cmds[0], 1);
+        
+        thread_sleep_for(CMDDELAY);
+        
+        //Write 0xAA to 0x90 to read the last converted temperature
+        temp_sensor.write(temp_addr, &cmds[1], 1);
+        // Read the temperature into the read_temp array
+        temp_sensor.read(temp_addr, read_temp, 2);
+        
+        //Convert temperature to Celsius
+        float temp = (float((read_temp[0] << 8) | read_temp[1]) / 256);
+        
+        //Print temperature to the serial monitor
+        printf("Temp = %.2f\n", temp);
+    }
+}
+
+
