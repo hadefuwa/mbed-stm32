@@ -1,0 +1,18 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+#include "TextLCD.h"
+
+SPI spi_lcd(D11, NC, D13);
+TextLCD_SPI lcd(&spi_lcd, D10);
+
+int main()
+{
+    lcd.printf("Hello World");
+    thread_sleep_for(2000);
+    lcd.cls();  //clear screen
+    lcd.printf("Hello ");
+    lcd.locate(0, 1);   //move curson to colimn 0, row 1
+    lcd.printf("World");
+}
+
+
