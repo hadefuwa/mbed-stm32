@@ -1,0 +1,22 @@
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+#include "TextLCD.h"
+
+SPI spi_lcd(D11, NC, D13);
+TextLCD_SPI lcd(&spi_lcd, D10);
+
+int main()
+{
+    while(1)
+    {
+        for (int i = 0; i < 100; ++i)
+        {
+            lcd.printf("%d", i);
+            thread_sleep_for(1000);
+            lcd.cls();
+        }
+
+    }
+}
+
+
