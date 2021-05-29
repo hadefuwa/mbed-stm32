@@ -1,0 +1,20 @@
+#include "mbed.h"
+
+InterruptIn button(D6);
+DigitalOut led(D4);
+DigitalOut flash(LED1);
+
+void flip()
+{
+    led = !led;
+}
+
+int main()
+{
+    button.mode(PullUp);
+    button.rise(&flip);  // attach the address of the flip function to the rising edge
+    while (1) {          // wait around, interrupts will interrupt this!
+        flash = !flash;
+        thread_sleep_for(250);
+    }
+}
