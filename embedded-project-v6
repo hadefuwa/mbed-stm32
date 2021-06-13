@@ -1,0 +1,302 @@
+/*
+
+Hamed Adefuwa 01/06/2021
+University Embedded Systems Final Project 
+
+Task: Create a complete hardware system including the 
+temperature sensor and LCD screen. 
+The system should be capable of displaying 
+the current temperature on the LCD, 
+display the current time in hours and minutes on the LCD 
+and the ability to set the time using switches.
+
+Version 1 - Done
+Can crudely display time although the second incrementation is done
+just via the program length time, i.e each iteration of the program
+increments the second counter
+
+Version 2 - Done
+Using a ticker to increment the seconds variable
+
+Version 3 - Done
+Needs to use the buttons to set the time at startup.
+Buttons are working well
+Time setting feature complete
+
+Version 4 - Done
+Add buttons that can decrement variables
+
+Version 5 - Done
+Red LED when time not set D9
+Green LED when time set D12
+
+Version 6 - Done
+Indication using RGB LED of too high, correct or too low a temperature.
+
+Version 7 - Not Started
+Alarm Setting feature
+
+Version 8 - Not Started
+Uploading data to the cloud
+
+*/
+#include "mbed.h"
+#include "platform/mbed_thread.h"
+#include "TextLCD.h"
+#include "Timer.h"
+#define CMDDELAY 500 //delay for command in ms
+
+using namespace std::chrono;
+
+//function declarations
+void tempFunction();
+void clockFunction();
+void lcdFunction();
+void timeSetupFunction();
+
+//LCD declarations
+SPI spi_lcd(D11, NC, D13);
+TextLCD_SPI lcd(&spi_lcd, D10);
+
+//variables for time - hours, mins, seconds
+int hoursVar = 0;
+int minutesVar = 0;
+int secondsVar = 0;
+
+//Set flag for starting program once settings are set
+//create if statement to start program once setFlag = 1
+int hoursFlag = 0;
+int minutesFlag = 0;
+int secondsFlag = 0;
+int setFlag = 0;
+
+// these are the four buttons that change time
+// each button needs to increment from 0 to 60 and back to 0
+DigitalIn hoursButton(A5); //changed to analog pins to allow for extra pins
+DigitalIn minutesButton(A4);
+DigitalIn secondsButton(A3);
+DigitalIn setButton(A2);
+
+//Decrement buttons
+DigitalIn hoursDownButton(D6);
+DigitalIn minutesDownButton(D7);
+DigitalIn secondsDownButton(D8);
+
+//On & Off LEDS Status LEDs
+DigitalOut offLED(D9);
+DigitalOut onLED(D12);
+
+//ticker to count in seconds
+Ticker secondsIncrement;
+
+//RGB LED
+DigitalOut Green = (D2);
+DigitalOut Red = (D4);
+DigitalOut Blue = (D3);
+
+#define LOWTEMP 29
+#define HIGHTEMP 30
+
+// I2C connection
+I2C temp_sensor(D14, D15);
+
+// I2C address of temperature sensor DS1631
+const int temp_addr = 0x90; //default address with all address pins low
+
+char cmds[] = {0x51, 0xAA}; //commands for start temperature conversion
+
+//read temperature
+char read_temp[2];
+
+int main()
+{
+    char str[32];
+    offLED = 1; //turn on off-status LED    
+    onLED = 0;
+    timeSetupFunction(); //set the time
+    secondsIncrement.attach(clockFunction, 1000ms); //1 second counter
+    
+    while(1)
+    {
+        tempFunction(); //take the temperature
+
+        if (setFlag == 1) //turn on green led once time is set
+        {
+            offLED = 0;    
+            onLED = 1;    
+        }
+    }
+    
+}
+
+void timeSetupFunction()  //allow user to input time
+{
+    //Pull up all pins
+    hoursButton.mode(PullUp);
+    minutesButton.mode(PullUp);
+    secondsButton.mode(PullUp);
+    hoursDownButton.mode(PullUp);
+    minutesDownButton.mode(PullUp);
+    secondsDownButton.mode(PullUp);
+    setButton.mode(PullUp);
+    
+    lcdFunction(); //display enter time prompt
+    
+    while (setFlag == 0)
+    {
+        if (hoursButton == 0)
+        {
+            hoursVar++;
+            lcdFunction();
+            thread_sleep_for(CMDDELAY); //debounce
+            //hoursFlag = 1;
+        }
+        if (minutesButton == 0)
+        {
+            minutesVar++;
+            lcdFunction();
+            thread_sleep_for(CMDDELAY); //debounce
+            //minutesFlag = 1;
+        }
+        if (secondsButton == 0)
+        {
+            secondsVar++;
+            lcdFunction();
+            thread_sleep_for(CMDDELAY); //debounce
+            //secondsFlag = 1;
+        }
+        if (hoursDownButton == 0)
+        {
+            hoursVar--;
+            lcdFunction();
+            thread_sleep_for(CMDDELAY); //debounce
+            //hoursFlag = 1;
+        }
+        if (minutesDownButton == 0)
+        {
+            minutesVar--;
+            lcdFunction();
+            thread_sleep_for(CMDDELAY); //debounce
+            //minutesFlag = 1;
+        }
+        if (secondsDownButton == 0)
+        {
+            secondsVar--;
+            lcdFunction();
+            thread_sleep_for(CMDDELAY); //debounce
+            //secondsFlag = 1;
+        }
+        
+        if (setButton == 0)
+        {
+            //once the time has been set, then allow program to continue
+            setFlag = 1; 
+        }
+   
+    }
+}
+
+void clockFunction() 
+{
+  secondsVar++;
+  if(secondsVar>59) {minutesVar++; secondsVar=0;}
+  if(minutesVar>59) {hoursVar++; minutesVar=0;}
+  if(hoursVar>23) {hoursVar=0;}
+}
+
+void tempFunction()
+{
+    //Write 0x51 to 0x90 to start temp conversion
+    temp_sensor.write(temp_addr, &cmds[0], 1);
+    
+    thread_sleep_for(CMDDELAY);
+    
+    //Write 0xAA to 0x90 to read the last converted temperature
+    temp_sensor.write(temp_addr, &cmds[1], 1);
+    // Read the temperature into the read_temp array
+    temp_sensor.read(temp_addr, read_temp, 2);
+    
+    //Convert temperature to Celsius
+    float temp = (float((read_temp[0] << 8) | read_temp[1]) / 256);
+    
+    //Print temperature to the serial monitor
+    printf("Temp: %.2f\n", temp);
+    lcd.cls();  //clear screen
+    lcd.printf("Temp: %.2f\n", temp);
+    lcd.locate(0, 1);
+    lcd.printf("Time: %d:%d:%d\n", hoursVar, minutesVar,secondsVar);
+    
+    if (temp < LOWTEMP)
+    {
+        Red = 0;
+        Green = 0;
+        Blue = 1;
+    }
+    if (temp > LOWTEMP && temp < HIGHTEMP)
+    {
+        Red = 0;
+        Green = 1;
+        Blue = 0;
+    }
+    if (temp > HIGHTEMP)
+    {
+        Red = 1;
+        Green = 0;
+        Blue = 0;
+    }     
+}
+
+void lcdFunction()
+{
+    lcd.cls();
+    lcd.printf("Enter Time:");
+    lcd.printf("\n%d:%d:%d", hoursVar, minutesVar,secondsVar);
+    //inrement if statements just used for making sure the clock rolls round
+    //whilst the time is being set
+    if(secondsVar>59) 
+    {
+        minutesVar++; 
+        secondsVar=0;
+        lcd.cls();
+        lcd.printf("Enter Time:");
+        lcd.printf("\n%d:%d:%d", hoursVar, minutesVar,secondsVar);
+    }
+    if(minutesVar>59) 
+    {
+        hoursVar++; 
+        minutesVar=0;
+        lcd.cls();
+        lcd.printf("Enter Time:");
+        lcd.printf("\n%d:%d:%d", hoursVar, minutesVar,secondsVar);
+    }
+    if(hoursVar>23) 
+    {
+        hoursVar=0;
+        lcd.cls();
+        lcd.printf("Enter Time:");
+        lcd.printf("\n%d:%d:%d", hoursVar, minutesVar,secondsVar);
+    } 
+    //decrement if statements
+    if(secondsVar<0) 
+    {
+        secondsVar=59;
+        lcd.cls();
+        lcd.printf("Enter Time:");
+        lcd.printf("\n%d:%d:%d", hoursVar, minutesVar,secondsVar);
+    }
+    if(minutesVar<0) 
+    {
+        minutesVar=59;
+        lcd.cls();
+        lcd.printf("Enter Time:");
+        lcd.printf("\n%d:%d:%d", hoursVar, minutesVar,secondsVar);
+    }
+    if(hoursVar<0) 
+    {
+        hoursVar=23;
+        lcd.cls();
+        lcd.printf("Enter Time:");
+        lcd.printf("\n%d:%d:%d", hoursVar, minutesVar,secondsVar);
+    }    
+}
+
